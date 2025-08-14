@@ -30,7 +30,16 @@
   // };
   // ---------------------- scroller end ---------------------------------
   import Tooltip from './Tooltip.svelte';
-  import { type Snippet } from 'svelte';
+  import { type Snippet, onMount } from 'svelte';
+  // lib/scrollTo.js
+  import { afterNavigate } from '$app/navigation';
+
+  export function scrollToPosition(top: number, left: number) {
+    afterNavigate(() => {
+      window.scroll({ top, left, behavior: 'smooth' });
+    });
+  }
+
   // let preferPos = 'top,left,right,bottom,';
   // const getPreferredPos = () => {
   //   let list = '';
@@ -72,6 +81,14 @@
       }
     }
   };
+  onMount(() => {
+    // window.scroll({
+    //   top: 450,
+    //   left: 800,
+    //   behavior: 'smooth',
+    // });
+    scrollToPosition(450, 800);
+  });
 </script>
 
 {#snippet tooltipPanel(cssStyle: string)}
