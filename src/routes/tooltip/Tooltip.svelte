@@ -29,9 +29,9 @@
     translateY = '0px',
     preferredPos = 'top,left,right,bottom',
   }: TProps = $props();
-  const preferred = $derived(
-    preferredPos.replace(/\s+/g, '').split(',') as string[],
-  );
+  const getPreferred = () => {
+    return preferredPos.replace(/\s+/g, '').split(',') as string[];
+  };
 
   let snippet: HTMLDivElement | null = null;
   let visible = $state(false);
@@ -67,8 +67,9 @@
     OK.right =
       hoverRect.right - window.scrollX + ttpRect.width < window.innerWidth;
 
-    for (let i = 0; i < preferred.length; i++) {
-      switch (preferred[i] as string) {
+    for (let i = 0; i < getPreferred().length; i++) {
+      const pref = getPreferred();
+      switch (pref[i] as string) {
         case 'top':
           if (OK.top && OK.right) {
             translateX = '0px';

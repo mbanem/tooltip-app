@@ -31,21 +31,19 @@
   // ---------------------- scroller end ---------------------------------
   import Tooltip from './Tooltip.svelte';
   import { type Snippet } from 'svelte';
-  let cssPos = $state<string>('top');
   // let preferPos = 'top,left,right,bottom,';
-  const getPreferredPos = () => {
-    let list = '';
-    let current = cssPos;
-    ['top', 'left', 'right', 'bottom'].forEach((p) => {
-      if (p === current) {
-        list = p + ',' + list;
-      } else {
-        list = list + p + ',';
-      }
-    });
-    return list;
-  };
-  let preferPos = $derived(getPreferredPos());
+  // const getPreferredPos = () => {
+  //   let list = '';
+  //   let current = cssPos;
+  //   ['top', 'left', 'right', 'bottom'].forEach((p) => {
+  //     if (p === current) {
+  //       list = p + ',' + list;
+  //     } else {
+  //       list = list + p + ',';
+  //     }
+  //   });
+  //   return list;
+  // };
   const props = {
     delay: 250,
     duration: 800,
@@ -55,6 +53,24 @@
   };
   const printReport = () => {
     console.log('printing the report...');
+  };
+
+  let preferPos = $state<string>('top,left,right,bottom,');
+  const setPosList = (e: MouseEvent) => {
+    const target = e.target as HTMLButtonElement;
+    const pos = target.textContent;
+    if (preferPos.includes(pos)) {
+      // remove the position from the list
+      preferPos = preferPos.replace(pos + ',', '');
+      preferPos = pos + ',' + preferPos;
+    } else {
+      // add the position to the list
+      if (pos === 'clear') {
+        preferPos = 'top,left,right,bottom';
+      } else {
+        preferPos += pos + ',';
+      }
+    }
   };
 </script>
 
@@ -82,29 +98,20 @@
   </Tooltip>
   <p style="margin-left:12rem;">Change Preferred Tooltip Position</p>
   <input class="input" bind:value={preferPos} />
+  <p class="preferable-info">Clicking a button sets it preferable</p>
   <div class="radio-wrapper">
-    {#each ['top', 'left', 'right', 'bottom', 'clear'] as pos}
-      <label for={pos}>
-        <input
-          type="radio"
-          checked={pos === cssPos}
-          name={pos}
-          id={pos}
-          value={pos}
-          bind:group={cssPos}
-        />
-        {pos}
-      </label>
+    {#each ['top', 'left', 'right', 'bottom', 'clear'] as caption}
+      <button onclick={setPosList}>{caption}</button>
     {/each}
   </div>
-  <pre>
+  <pre class="scroll-info">
   Hover over button to  trigger a tooltip.
 
   Scroll to make no space available for
   top or left so tooltip should examine
   next available positions from the input
   box that you can enter the next list
-      </pre>
+  </pre>
 </div>
 
 <!-- TEST if first preferred has no space try succeeding one by one -->
@@ -265,5 +272,13 @@
     label {
       margin-top: 2rem;
     }
+  }
+  .preferable-info {
+    margin-left: 12rem;
+    color: gray;
+    font-size: 0.9rem;
+  }
+  .scroll-info {
+    margin-left: 10rem !important;
   }
 </style>
