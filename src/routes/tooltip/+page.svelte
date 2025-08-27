@@ -1,37 +1,6 @@
 <script lang="ts">
-  // ---------------------- scroller begin ---------------------------------
-  // import { tick } from 'svelte';
-
-  // let center = 1; // center number of visible triplet
-  // let offset = 0; // -1 for left scroll, +1 for right scroll
-  // let container: HTMLDivElement;
-
-  // // Current sequence
-  // let numbers = [center - 1, center, center + 1];
-
-  // const scroll = (direction: 'left' | 'right') => {
-  //   offset = direction === 'left' ? -1 : 1;
-
-  //   // Trigger the animation by shifting the container
-  //   // await tick(); // Wait for DOM update
-  //   container.style.transition = 'transform 2s ease';
-  //   container.style.transform = `translateX(${direction === 'left' ? '42%' : '-42%'})`;
-
-  //   // Wait for the animation to complete
-  //   setTimeout(() => {
-  //     // Reset styles
-  //     container.style.transition = '';
-  //     container.style.transform = '';
-
-  //     // Update center and sequence
-  //     center += offset;
-  //     offset = 0;
-  //   }, 980);
-  // };
-  // ---------------------- scroller end ---------------------------------
   import Tooltip from '$lib/components/CRTooltip.svelte';
-  import { type Snippet, onMount } from 'svelte';
-  // lib/scrollTo.js
+  import { onMount, type Snippet } from 'svelte';
   import { afterNavigate } from '$app/navigation';
 
   export function scrollToPosition(top: number, left: number) {
@@ -40,24 +9,10 @@
     });
   }
 
-  // let preferPos = 'top,left,right,bottom,';
-  // const getPreferredPos = () => {
-  //   let list = '';
-  //   let current = cssPos;
-  //   ['top', 'left', 'right', 'bottom'].forEach((p) => {
-  //     if (p === current) {
-  //       list = p + ',' + list;
-  //     } else {
-  //       list = list + p + ',';
-  //     }
-  //   });
-  //   return list;
-  // };
   const props = {
     delay: 250,
     duration: 800,
     baseScale: 0,
-    caption: 'Printing the Report',
     // preferredPos: preferPos,
   };
   const printReport = () => {
@@ -65,34 +20,39 @@
   };
 
   let preferPos = $state<string>('top,left,right,bottom,');
+  // Five buttons to set preferred position or reset the list
   const setPosList = (e: MouseEvent) => {
     const target = e.target as HTMLButtonElement;
     const pos = target.textContent;
     if (preferPos.includes(pos)) {
-      // remove the position from the list
+      // to relocate first remove the position from the list
+      // and then prepend it to the list
       preferPos = preferPos.replace(pos + ',', '');
       preferPos = pos + ',' + preferPos;
     } else {
-      // add the position to the list
-      if (pos === 'clear') {
+      // set the default list
+      if (pos === 'reset') {
         preferPos = 'top,left,right,bottom';
       } else {
         preferPos += pos + ',';
       }
     }
   };
+  let captionContainer: HTMLDivElement | null = null;
   onMount(() => {
     // window.scroll({
     //   top: 450,
     //   left: 800,
     //   behavior: 'smooth',
     // });
-    scrollToPosition(450, 800);
+
+    // to enable testing tooltip repositioning on scroll
+    scrollToPosition(55 * 16, 80 * 16);
   });
 </script>
 
-{#snippet tooltipPanel(cssStyle: string)}
-  <div class="tooltip-panel" style={cssStyle}>
+{#snippet tooltipPanel(styleCSS?: string)}
+  <div class="tooltip-panel" style={styleCSS ? styleCSS : ''}>
     <p style="color:lightgreen;font-size:22px;margin:0;">
       Filip Isakovic, Junior
     </p>
@@ -105,9 +65,9 @@
 <div class="tooltip-wrapper">
   <Tooltip
     {...props}
-    preferredPos={preferPos}
     {tooltipPanel}
-    class_tooltipPanel={'css-prop-class_tooltipPanel'}
+    caption={'Click to Print Tooltip Panel -- ignored as tooltipPanel is provided'}
+    preferredPos={preferPos}
   >
     <button class="hovering-button" onclick={printReport}>
       Filip Isakovic
@@ -117,18 +77,28 @@
   <input class="input" bind:value={preferPos} />
   <p class="preferable-info">Clicking a button sets it preferable</p>
   <div class="radio-wrapper">
-    {#each ['top', 'left', 'right', 'bottom', 'clear'] as caption}
-      <button onclick={setPosList}>{caption}</button>
+    {#each ['top', 'left', 'right', 'bottom', 'reset'] as title}
+      <button onclick={setPosList}>{title}</button>
     {/each}
   </div>
   <pre class="scroll-info">
-  Hover over button to  trigger a tooltip.
-
-  Scroll to make no space available for
-  top or left so tooltip should examine
-  next available positions from the input
-  box that you can enter the next list
-  </pre>
+      Hover over button to  trigger a tooltip.
+      
+      Scroll to make no space available for
+      top or left so tooltip should examine
+      next available positions from the input
+      box that you can enter the next list
+    </pre>
+  <Tooltip
+    {...props}
+    preferredPos={preferPos}
+    caption="caption: This is the caption"
+    captionCSS="css-prop-class-caption"
+  >
+    <button class="hovering-button" onclick={printReport}>
+      child: Tooltip with caption only
+    </button>
+  </Tooltip>
 </div>
 
 <!-- TEST if first preferred has no space try succeeding one by one -->
@@ -184,21 +154,13 @@
   }
   .tooltip-wrapper {
     width: max-content;
-    margin: 45rem 0 0 80rem;
+    margin: 55rem 0 0 80rem;
     pre,
     .input {
       margin-left: 12rem;
     }
-    // height: 1.3rem;
-    // padding: 1rem 2rem;
-    // margin: 6rem 10rem !important;
-    // border: 1px solid gray;
-    // border-radius: 5px;
-    // color: white;
-    // background-color: navy;
-    // cursor: pointer;
   }
-  :global(.css-prop-class_tooltipPanel) {
+  :global(.css-prop-class-tooltipPanel) {
     position: absolute;
     top: 0 !important;
     left: 0;
@@ -211,6 +173,7 @@
     text-align: center;
     z-index: 10;
   }
+
   .grid-wrapper {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -227,6 +190,19 @@
       width: max-content;
       padding: 0 0.5rem;
     }
+  }
+  :global(.css-prop-class-caption) {
+    font-size: 14px;
+    color: skyblue;
+    width: max-content;
+    height: 1rem !important;
+    padding: 0 1rem !important;
+    border-radius: 5px;
+    border: 1px solid skyblue;
+    background-color: navy;
+    text-align: center;
+    margin: 0;
+    outline: none;
   }
   .text-gradient {
     @include gradient-text();
@@ -265,6 +241,7 @@
     display: flex;
     width: 300%; /* 3 items */
     margin-top: 0; /* to suppress interfering with animation*/
+    margin: 0;
     margin-left: -100%;
   }
 

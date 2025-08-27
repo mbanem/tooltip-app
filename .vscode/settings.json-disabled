@@ -1,0 +1,31 @@
+{
+  "todohighlight.isEnable": true,
+  "todohighlight.isCaseSensitive": true,
+  "todohighlight.keywords": [
+    {
+      "text": "Todo",
+      "color": "white",
+      "backgroundColor": "#2ecc71",
+      "border": "1px solid #27ae60",
+      "borderRadius": "4px",
+      "isWholeLine": false
+    }
+  ],
+  "todohighlight.include": ["**/*.ts", "**/*.tsx", "**/*.svelte"],
+  "todohighlight.exclude": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/.vscode/**",
+    "**/.next/**",
+    "**/*.min.*",
+    "**/*.map"
+  ],
+  "todohighlight.keywordsPattern": "Todo.*",
+  "todohighlight.defaultStyle": {
+    "color": "#ffffff",
+    "backgroundColor": "#ff4500",
+    "overviewRulerColor": "#ffab00",
+    "isWholeLine": false
+  }
+}
