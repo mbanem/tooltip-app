@@ -46,6 +46,8 @@
   // End of fadeScale
 
   const r = Math.round;
+
+  //#region Props
   type TProps = {
     delay?: number;
     duration?: number;
