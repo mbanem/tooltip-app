@@ -1,6 +1,6 @@
 <script lang="ts">
   import Tooltip from '$lib/components/CRTooltip.svelte';
-  import { onMount, type Snippet } from 'svelte';
+  import { onMount } from 'svelte';
   import { afterNavigate } from '$app/navigation';
 
   export function scrollToPosition(top: number, left: number) {
@@ -51,7 +51,7 @@
   });
 </script>
 
-{#snippet tooltipPanel(styleCSS?: string)}
+{#snippet userDetails(styleCSS?: string)}
   <div class="tooltip-panel" style={styleCSS ? styleCSS : ''}>
     <p style="color:lightgreen;font-size:22px;margin:0;">
       Filip Isakovic, Junior
@@ -65,8 +65,8 @@
 <div class="tooltip-wrapper">
   <Tooltip
     {...props}
-    {tooltipPanel}
-    caption={'Click to Print Tooltip Panel -- ignored as tooltipPanel is provided'}
+    tooltipPanel={userDetails}
+    caption={'Click to Print Tooltip Panel -- ignored as userDetails is provided'}
     preferredPos={preferPos}
   >
     <button class="hovering-button" onclick={printReport}>
@@ -160,7 +160,7 @@
       margin-left: 12rem;
     }
   }
-  :global(.css-prop-class-tooltipPanel) {
+  :global(.css-prop-class-userDetails) {
     position: absolute;
     top: 0 !important;
     left: 0;

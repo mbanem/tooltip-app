@@ -1,3 +1,37 @@
+<!-- 
+@component
+CRTooltip could accept the following props, though all are optional
+  type TProps = {
+    delay?: number;                 // transform params delay duration and baseScale
+    duration?: number;
+    baseScale?: number;
+    caption?: string;               // caption, a string, and tooltipPanel are mutually exclusive.
+                                    // caption string can be styled by CSS style string sent as captionCSS prop
+
+    captionCSS?: string;            // user styling as a CSS string applied after CRTooltip provided default-caption
+                                    // e.g. captionCSS='font-size:14px; color:orange;'
+    tooltipPanel?: TPanel;          // snippet object defined by user and it is sent by object name to component via $props()
+                                    // if caption and tooltipPanel snippet name are both specified caption is ignored
+                                    // e.g. for {#snippet userDetails(user)} we specify $props()
+                                    // tooltipPanel={userDetails}   -- a function reference, no a  name as string
+    
+    tooltipPanelCSSClassName?: string; // user could send tooltipPanel's CSS class to CRTooltip to apply, but the CSS
+                                    // class name e.g. for userDetails snippet is named :global(.css-prop-class-userDetails)
+                                    // ans in CSS it must be encapsulated with :global() in order to propagate tp the component
+                                    // :global(.css-prop-class-userDetails){ CSS Roles... }
+
+    children?: Snippet;             // Any HTML markup content between <Tooltip> children... </Tooltip> tags.
+                                    // Children is a hovering element triggering tooltip visibility via mouseenter/mouseleave
+                                    // so children HTML markup is usually encapsulated in a single HTML element
+
+    preferredPos?: string;          // When, due to scrolling, there is a lack of space around the hovering element CRTooltip
+                                    // tries to find available space following the recommended sequence by user from the 
+                                    // preferredPos prop string or, if not specified, use the default one 'top,left,right,bottom' 
+
+  };
+
+-->
+
 <script lang="ts">
   import { browser } from '$app/environment';
   import { cubicInOut } from 'svelte/easing';
@@ -59,7 +93,8 @@
   let tooltipPanelEl = $state<HTMLElement | null>(null);
   const round = Math.round;
 
-  type TPanel = (className?: string) => ReturnType<Snippet>;
+  type TPanel = ((className?: string) => ReturnType<Snippet>) | null;
+
   type TProps = {
     delay?: number;
     duration?: number;
@@ -68,9 +103,7 @@
     captionCSS?: string;
     tooltipPanel?: TPanel;
     children?: Snippet;
-    translateX?: string;
-    translateY?: string;
-    class_tooltipPanel?: string;
+    tooltipPanelCSSClassName?: string;
     preferredPos?: string;
   };
 
@@ -82,11 +115,14 @@
     captionCSS = '',
     tooltipPanel,
     children,
-    translateX = '0px',
-    translateY = '0px',
     preferredPos = 'top,left,right,bottom',
   }: TProps = $props();
 
+  // Need to define variables as the setTooltipPos function adjusted them
+  // to position properly based on preferredPos settings and available
+  // space around the hovering elements
+  let translateX = $state<string>('');
+  let translateY = $state<string>('');
   let panel: TPanel = tooltipPanel
     ? tooltipPanel
     : caption
