@@ -276,7 +276,7 @@
 {#if initial}
   <div bind:this={tooltipPanelEl} class="ttWrapper">
     {@render panel?.(
-      `position:absolute;top:-9999px;left:-9999px;visibility:visible;padding:6px 1rem;margin:0;`,
+      `position:absolute;top:-9999px;left:-9999px;visibility:visible;padding:6px 0.5rem;margin:0;`,
     )}
   </div>
 {/if}
@@ -317,7 +317,7 @@
     >
       <div class="ttWrapper">
         {@render panel?.(
-          'position:absolute;top:0;left:0;color:yellow;z-index:-10;padding:6px 1rem;margin:0;',
+          'position:absolute;top:0;left:0;color:yellow;z-index:-10;padding:6px 0.5rem;margin:0;',
         )}
       </div>
     </div>
