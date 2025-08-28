@@ -258,7 +258,7 @@
         }
 
         // Clean up after logging
-        // (tooltipPanelEL as HTMLElement).remove();
+        (tooltipPanelEl as HTMLElement).remove();
       }
     }, 0);
 
@@ -271,12 +271,12 @@
 </script>
 
 <!-- NOTE: transform:translate is defined in the fade-scale and must specify
-    the same left/top values as the one in this tooltipPanelEL handler
+    the same left/top values as the one in this tooltipPanelEl handler
 -->
 {#if initial}
   <div bind:this={tooltipPanelEl} class="ttWrapper">
     {@render panel?.(
-      `position:absolute;top:-9999px;left:-9999px;visibility:visible;`,
+      `position:absolute;top:-9999px;left:-9999px;visibility:visible;padding:6px 1rem;margin:0;`,
     )}
   </div>
 {/if}
@@ -286,7 +286,7 @@
     bind:this={tooltipPanelEl}
     class="caption-default captionCSS"
     style={style ??
-      'padding:0 1rem;margin:0 !important;padding:0;height: 1rem !important;'}
+      'padding:0 1rem;margin:0 !important;height: 1rem !important;'}
   >
     <p style="margin:0; padding:0;">{caption}</p>
   </div>
