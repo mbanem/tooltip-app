@@ -8,10 +8,10 @@ type TProps = {
   duration?: number;
   baseScale?: number;
   caption?: string; // caption, a string, and tooltipPanel are mutually exclusive.
-  // caption string can be styled by CSS style string sent as captionCSS prop
+  // caption string can be styled by CSS style string sent as captionCSSStyle prop
 
-  captionCSS?: string; // user styling as a CSS string that overrides CRTooltip provided default-caption
-  // CSS string; e.g. captionCSS='font-size:14px; color:orange;'
+  captionCSSStyle?: string; // user styling as a CSS string that overrides CRTooltip provided default-caption
+  // CSS string; e.g. captionCSSStyle='font-size:14px; color:orange;'
   tooltipPanel?: TPanel; // snippet object defined by user and it is sent by object name to component via $props()
   // if caption and tooltipPanel snippet name are both specified caption is ignored
   // e.g. for {#snippet userDetails(user)} we specify $props()
@@ -89,7 +89,7 @@ type TProps = {
     {...props}
     preferredPos={preferPos}
     caption="caption: This is the tooltip as a caption"
-    captionCSS="css-prop-class-caption"
+    captionCSSStyle="css-prop-class-caption"
 
   >
     <!-- first child begin -->

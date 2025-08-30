@@ -51,8 +51,8 @@
   });
 </script>
 
-{#snippet userDetails(styleCSS?: string)}
-  <div class="tooltip-panel" style={styleCSS ? styleCSS : ''}>
+{#snippet userDetails()}
+  <div class="tooltip-panel">
     <p style="color:lightgreen;font-size:22px;margin:0;">
       Filip Isakovic, Junior
     </p>
@@ -137,20 +137,20 @@
     border-radius: 5px;
     color: yellow;
     background-color: navy;
-  }
-  .tooltip-panel p {
-    color: yellow;
-    margin: 2px;
-    padding: 0;
-    text-align: center;
-    height: 1rem;
-    font-size: 14px;
-  }
-  .tooltip-panel p:first-child {
-    color: skyblue;
-    font-family: Times;
-    font-size: 22px;
-    padding: 3px 0 8px 0;
+    p {
+      color: yellow;
+      margin: 2px;
+      padding: 0;
+      text-align: center;
+      height: 1rem;
+      font-size: 14px;
+    }
+    p:first-child {
+      color: skyblue;
+      font-family: Times;
+      font-size: 22px;
+      padding: 3px 0 8px 0;
+    }
   }
   .tooltip-wrapper {
     width: max-content;

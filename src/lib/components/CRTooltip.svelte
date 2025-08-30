@@ -310,10 +310,12 @@ CRTooltip could accept the following props, though all are optional
     the same left/top values as the one in this tooltipPanelEl handler
 -->
 {#if initial}
-  <div bind:this={tooltipPanelEl} class="ttWrapper">
-    {@render panel?.(
-      `position:absolute;top:-9999px;left:-9999px;visibility:visible;padding:6px 0.5rem;margin:0;`,
-    )}
+  <div
+    bind:this={tooltipPanelEl}
+    style="`position:absolute;top:-9999px;left:-9999px;visibility:visible;padding:0;margin:0;border:none;outline:none;width:max-content;"
+    class="ttWrapper"
+  >
+    {@render panel?.()}
   </div>
 {/if}
 
@@ -322,7 +324,7 @@ CRTooltip could accept the following props, though all are optional
     bind:this={tooltipPanelEl}
     class="caption-default captionCSS"
     style={style ??
-      'padding:0 1rem;margin:0 !important;height: 1rem !important;'}
+      'padding:6px 0.5rem;margin:0 !important;height: 1rem !important;'}
   >
     <p style="margin:0; padding:0;">{caption}</p>
   </div>
@@ -385,7 +387,7 @@ CRTooltip could accept the following props, though all are optional
     width: max-content;
     /*height: auto;*/
     margin: 1rem !important;
-    padding: 0 1rem !important;
+    padding: 6px 1rem !important;
     border: none;
     outline: none;
   }
