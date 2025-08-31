@@ -3,34 +3,35 @@
   import { onMount } from 'svelte';
   import { afterNavigate } from '$app/navigation';
 
-  export function scrollToPosition(top: number, left: number) {
+  const scrollToPosition = (top: number, left: number) => {
     afterNavigate(() => {
       window.scroll({ top, left, behavior: 'smooth' });
     });
-  }
+  };
 
   const props = {
     delay: 250,
     duration: 800,
     baseScale: 0,
-    // preferredPos: preferPos,
+    captionCSS: 'css-prop-class-caption',
+    // preferredPos: preferPos,   // specify among props or inside <Tooltip> see below
   };
   const printReport = () => {
     console.log('printing the report...');
   };
 
   let preferPos = $state<string>('top,left,right,bottom,');
-  // Five buttons to set preferred position or reset the list
+  // For testing there are five buttons to set preferred position list or reset it
   const setPosList = (e: MouseEvent) => {
     const target = e.target as HTMLButtonElement;
     const pos = target.textContent;
     if (preferPos.includes(pos)) {
-      // to relocate first remove the position from the list
-      // and then prepend it to the list
+      // to relocate a position first remove it from the CSV list
+      // and then prepend it as the first element to the list
       preferPos = preferPos.replace(pos + ',', '');
       preferPos = pos + ',' + preferPos;
     } else {
-      // set the default list
+      // set the default position CSV list
       if (pos === 'reset') {
         preferPos = 'top,left,right,bottom';
       } else {
@@ -40,17 +41,20 @@
   };
   let captionContainer: HTMLDivElement | null = null;
   onMount(() => {
-    // window.scroll({
-    //   top: 450,
-    //   left: 800,
-    //   behavior: 'smooth',
-    // });
-
-    // to enable testing tooltip repositioning on scroll
+    // to enable testing tooltip repositioning with scroll
+    // making inadequate space for some position forcing the
+    // tooltip to select available position from the CSV list
     scrollToPosition(55 * 16, 80 * 16);
   });
 </script>
 
+<!-- render tooltipPanel snippet with complete CSS styling 
+  For tooltipPanel it is inconvenient to send CSS class to
+  the component in order to send it back as userDetail arg
+  so the local CSS class should be implemented.
+  For caption on the other hand accompanying CSS class should
+  be sent if caption string needs some styling
+-->
 {#snippet userDetails()}
   <div class="tooltip-panel">
     <p style="color:lightgreen;font-size:22px;margin:0;">
@@ -93,7 +97,6 @@
     {...props}
     preferredPos={preferPos}
     caption="caption: This is the caption"
-    captionCSS="css-prop-class-caption"
   >
     <button class="hovering-button" onclick={printReport}>
       child: Tooltip with caption only
@@ -160,52 +163,29 @@
       margin-left: 12rem;
     }
   }
-  :global(.css-prop-class-userDetails) {
-    position: absolute;
-    top: 0 !important;
-    left: 0;
-    color: navy;
-    background-color: skyblue;
-    width: 14.5rem;
-    padding: 3px 1.4rem;
-    border-radius: 5px;
-    margin: 2rem 0 0 2.3rem;
-    text-align: center;
-    z-index: 10;
-  }
-
-  .grid-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 1rem;
-    padding: 0;
-    .summary-mostly-parent {
-      font-size: 1.2rem;
-      color: var(--PRE-COLOR);
-      margin-inline-start: 1rem;
-      /* should be instead of margin-left in above details > p */
-      list-style-position: outside;
-      margin-left: 3rem;
-      cursor: pointer;
-      width: max-content;
-      padding: 0 0.5rem;
-    }
-  }
   :global(.css-prop-class-caption) {
-    font-size: 14px;
+    /*font-size: 14px;
     color: skyblue;
     width: max-content;
     height: 1rem !important;
     padding: 0 1rem !important;
     border-radius: 5px;
-    border: 1px solid skyblue;
+    border: 1px solid yellow;
     background-color: navy;
     text-align: center;
     margin: 0;
-    outline: none;
-  }
-  .text-gradient {
-    @include gradient-text();
+    outline: none;*/
+    border: 1px solid yellow !important;
+    border-radius: 5px;
+    color: yellow;
+    background-color: navy !important;
+    width: max-content;
+    padding: 3px 1rem !important;
+    margin: 0 !important;
+    text-align: center;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    z-index: 10;
   }
   .hovering-button {
     margin: 0; //8rem 0 0 18rem;
@@ -218,47 +198,7 @@
     font-size: 17px;
     color: navy;
   }
-  /* ------------  scroller ------------ */
-  .scroller {
-    margin: 0;
-  }
-  .container {
-    margin-left: 3rem;
-    padding: 0;
-  }
-  .viewport {
-    overflow: hidden;
-    width: 100px;
-    /* border: 1px solid gray; */
-    border-radius: 5px;
-    color: navy;
-    background-color: cornsilk;
-    margin-left: 1.6rem;
-    margin-top: 1px;
-  }
-
-  .row {
-    display: flex;
-    width: 300%; /* 3 items */
-    margin-top: 0; /* to suppress interfering with animation*/
-    margin: 0;
-    margin-left: -100%;
-  }
-
-  .number-box {
-    width: 100px;
-    flex-shrink: 0;
-    text-align: center;
-    font-size: 2em;
-  }
-
-  .buttons {
-    margin-top: 1rem;
-  }
   .radio-wrapper {
-    // position: absolute;
-    // top: 31rem;
-    // left: 12rem;
     margin-left: 11rem;
     display: flex;
     gap: 1rem;

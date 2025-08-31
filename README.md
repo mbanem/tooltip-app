@@ -127,8 +127,7 @@ type TProps = {
     border-radius: 5px;
     color: yellow;
     background-color: navy;
-  }
-  .tooltip-panel p {
+   p {
     color: yellow;
     margin: 2px;
     padding: 0;
@@ -136,11 +135,12 @@ type TProps = {
     height: 1rem;
     font-size: 14px;
   }
-  .tooltip-panel p:first-child {
+  p:first-child {
     color: skyblue;
     font-family: Times;
     font-size: 22px;
     padding: 3px 0 8px 0;
+  }
   }
 
   /* In order to obtain the proper size of tooltipPanel
