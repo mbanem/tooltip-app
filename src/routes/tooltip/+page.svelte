@@ -13,7 +13,8 @@
     delay: 250,
     duration: 800,
     baseScale: 0,
-    captionCSS: 'css-prop-class-caption',
+    captionCSS:
+      'border: 1px solid yellow;border-radius: 5px;color: yellow;background-color: navy;width: max-content;padding: 3px 1rem;margin: 0;text-align: center;font-size: 14px;font-family: Arial, Helvetica, sans-serif;z-index: 10;',
     // preferredPos: preferPos,   // specify among props or inside <Tooltip> see below
   };
   const printReport = () => {
@@ -175,13 +176,13 @@
     text-align: center;
     margin: 0;
     outline: none;*/
-    border: 1px solid yellow !important;
+    border: 1px solid yellow;
     border-radius: 5px;
     color: yellow;
-    background-color: navy !important;
+    background-color: navy;
     width: max-content;
-    padding: 3px 1rem !important;
-    margin: 0 !important;
+    padding: 3px 1rem;
+    margin: 0;
     text-align: center;
     font-size: 14px;
     font-family: Arial, Helvetica, sans-serif;

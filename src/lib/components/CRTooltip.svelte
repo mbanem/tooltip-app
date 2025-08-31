@@ -8,8 +8,14 @@ CRTooltip could accept the following props, though all are optional
     caption?: string;               // caption, a string, and tooltipPanel are mutually exclusive.
                                     // caption string can be styled by CSS style string sent as captionCSS prop
 
-    captionCSS?: string;            // user styling as a CSS string applied after CRTooltip provided default-caption
-                                    // e.g. captionCSS='font-size:14px; color:orange;'
+    captionCSS?: string;            // user styling as a CSS class name or a style string applied e.g. captionCSS="caption-class'
+                                    // with :global(.caption-class) or with style captionCSS='font-size:14px; color:orange;'
+
+                                    // When parent page has several hovering elements with tooltip captions the sane class name
+                                    // or a style string variable is used in props structure with a name that differ from oter
+                                    // props structure is their contents are different, so there could be prop structures
+                                    // for several panels and others for some caption strings.
+
     tooltipPanel?: TPanel;          // snippet object defined by user and it is sent by object name to component via $props()
                                     // if caption and tooltipPanel snippet name are both specified caption is ignored
                                     // e.g. for {#snippet userDetails(user)} we specify $props()
@@ -315,14 +321,23 @@ CRTooltip could accept the following props, though all are optional
 {/if}
 
 {#snippet captionPanel(style?: string)}
-  <div
-    bind:this={tooltipPanelEl}
-    class={captionCSS}
-    style={style ??
-      'padding:6px 0.5rem;margin:0 !important;height: 1rem !important;'}
-  >
-    <p style="margin:0; padding:0;">{caption}</p>
-  </div>
+  {#if captionCSS.includes(':')}
+    <div
+      bind:this={tooltipPanelEl}
+      style={captionCSS + 'position:absolute;top:0;left:0;'}
+    >
+      <p style="margin:0; padding:0;">{caption}</p>
+    </div>
+  {:else}
+    <div
+      bind:this={tooltipPanelEl}
+      class={captionCSS}
+      style={style ??
+        'padding:6px 0.5rem;margin:0 !important;height: 1rem !important;'}
+    >
+      <p style="margin:0; padding:0;">{caption}</p>
+    </div>
+  {/if}
 {/snippet}
 
 {#snippet handler()}
