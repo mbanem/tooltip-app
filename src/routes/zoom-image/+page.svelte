@@ -13,7 +13,11 @@
   let boxSize = 25;
   let imgRect: DOMRect | null = null;
 
-  function handleMouseMove(e: MouseEvent, img: string, el: HTMLImageElement) {
+  const handleMouseMove = (
+    e: MouseEvent,
+    img: string,
+    el: HTMLImageElement,
+  ) => {
     const rect = el.getBoundingClientRect();
     imgRect = rect;
 
@@ -24,14 +28,14 @@
     cursorY = Math.max(boxSize / 2, Math.min(y, rect.height - boxSize / 2));
 
     hoverImg = img;
-  }
+  };
 
-  function handleMouseLeave() {
+  const handleMouseLeave = () => {
     hoverImg = null;
     imgRect = null;
-  }
+  };
 
-  function zoomStyle(): string {
+  const zoomStyle = (): string => {
     if (!hoverImg || !imgRect) return '';
     const scale = 600 / boxSize;
 
@@ -48,10 +52,11 @@
     //   backgroundSize: `${imgRect.width * scale}px ${imgRect.height * scale}px`,
     //   backgroundPosition: `${bgX}px ${bgY}px`,
     // };
-  }
+  };
 </script>
 
 <div class="grid">
+  <!-- holding thumbnail images to hover over for zooming-->
   <div class="left">
     {#each images as img}
       <div
@@ -78,7 +83,7 @@
       </div>
     {/each}
   </div>
-
+  <!-- holding zooming space -->
   <div class="right">
     <p>Hover over an image to see it in greater details</p>
     {#if hoverImg}

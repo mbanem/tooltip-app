@@ -5,42 +5,47 @@ CRTooltip could accept the following props, though all are optional
     delay?: number;                 // transform params delay duration and baseScale
     duration?: number;
     baseScale?: number;
-    caption?: string;               // caption, a string, and tooltipPanel are mutually exclusive.
-                                    // caption string can be styled by CSS style string sent as captionCSS prop
+
+    caption?: string;               // caption, a string, and tooltipPanel snippet are mutually exclusive.
+                                    // The caption string can be styled by CSS style string or a class name
+                                    // sent as captionCSS prop. When both tooltipPanel and caption are specified 
+                                    // inside the props the caption string is ignored
 
     captionCSS?: string;            // user styling as a CSS class name or a style string applied e.g. captionCSS="caption-class'
-                                    // with :global(.caption-class) or with style captionCSS='font-size:14px; color:orange;'
+                                    // with :global(.caption-class){...} or with style captionCSS='font-size:14px; color:orange;'
 
-                                    // When parent page has several hovering elements with tooltip captions the sane class name
-                                    // or a style string variable is used in props structure with a name that differ from oter
-                                    // props structure is their contents are different, so there could be prop structures
-                                    // for several panels and others for some caption strings.
+                                    // When parent page has several hovering elements with tooltip captions the same class name
+                                    // or a style string variable is used in props structure with a name that differ from other
+                                    // props structure if their contents are different, so there could be prop structures
+                                    // for several panels and others for some caption strings: propsPanel, propsCaption1,...
 
-    tooltipPanel?: TPanel;          // snippet object defined by user and it is sent by object name to component via $props()
-                                    // if caption and tooltipPanel snippet name are both specified caption is ignored
+    tooltipPanel?: TPanel;          // A snippet object defined by parent page and sent as object name to a component via $props().
+                                    // If caption and tooltipPanel snippet name are both specified the caption is ignored
                                     // e.g. for {#snippet userDetails(user)} we specify $props()
-                                    // tooltipPanel={userDetails}   -- a function reference, no a  name as string
+                                    // tooltipPanel={userDetails}   -- a function reference, not as a string tooltipPanel="userDetails"
 
     children?: Snippet;             // Any HTML markup content between <Tooltip> children... </Tooltip> tags.
                                     // Children is a hovering element triggering tooltip visibility via mouseenter/mouseleave
-                                    // so children HTML markup is usually encapsulated in a single HTML element
+                                    // so children HTML markup is usually encapsulated in a single HTML hovering element
 
     preferredPos?: string;          // When, due to scrolling, there is a lack of space around the hovering element CRTooltip
-                                    // tries to find available space following the recommended sequence by user from the 
-                                    // preferredPos prop string or, if not specified, use the default one 'top,left,right,bottom' 
+                                    // tries to find an available space following the recommended sequence by the preferredPos
+                                    // prop string or, if not specified, by the default one 'top,left,right,bottom'
+    
+    toolbarHeight?: string          // If a page has a toolbar from a layout its height would impact calculation of the proper
+                                    // tooltip position required by preferredPos, so its height should be sent via props
 
   };
 
 -->
 
 <script lang="ts">
-  import { browser } from '$app/environment';
-  import { cubicInOut } from 'svelte/easing';
+  import { cubicInOut } from 'svelte/easing'; // for animated transition
   import { type Snippet, onMount } from 'svelte';
 
   import type { EasingFunction } from 'svelte/transition';
-  import { error } from '@sveltejs/kit';
 
+  // fade scale animation for displaying/hiding tooltip
   export interface FadeScaleParams {
     delay?: number;
     duration?: number;
@@ -105,6 +110,7 @@ CRTooltip could accept the following props, though all are optional
     tooltipPanel?: TPanel;
     children?: Snippet;
     preferredPos?: string;
+    toolbarHeight?: number;
   };
 
   let {
@@ -116,6 +122,7 @@ CRTooltip could accept the following props, though all are optional
     tooltipPanel,
     children,
     preferredPos = 'top,left,right,bottom',
+    toolbarHeight = 0,
   }: TProps = $props();
 
   console.log('captionCSS', captionCSS);
@@ -133,15 +140,19 @@ CRTooltip could accept the following props, though all are optional
   if (!panel) {
     throw new Error('tooltipPanel or caption is mandatory');
   }
+
   const getPreferred = () => {
     return preferredPos.replace(/\s+/g, '').split(',') as string[];
   };
 
   let visible = $state(false);
-  let ttRect: DOMRect | null = $state(null);
-  let hoverRect: DOMRect | null = $state(null);
+  // let ttRect: DOMRect | null = $state(null);
+  // let hoverRect: DOMRect | null = $state(null);
   let initial = $state(true);
 
+  // the setTooltipPos examine necessary parameters for applying
+  // tooltip at required position and is forced to iterate over
+  // the preferredPos list until params for a position match
   const OK = $state({
     top: false,
     bottom: false,
@@ -151,11 +162,20 @@ CRTooltip could accept the following props, though all are optional
     right: false,
   });
 
+  // the setTooltipPos is triggered via mouseenter and has to have
+  // rectangles for hovering element and its accompanying tooltip
+  // to move tooltip to the proper space. The HoverData is bound
+  // to accompanying hovering element via its id set by this
+  // component initially in onMount and is saved in a Record list
   type HoverData = {
     hoverRect: DOMRect;
     tooltipRect: DOMRect;
   };
   // Record is an array type of a given key type and value type
+  // where  key is a hovering element id inserted inside onMount
+  // and registered in hoverRec array easy to fetch it when
+  // onmouseenter handler has to display tooltip in a required
+  // preferredPos position
   type HoverRecord = Record<string, HoverData>;
   const hoverRec: HoverRecord = {};
 
@@ -163,8 +183,12 @@ CRTooltip could accept the following props, though all are optional
     hoverRec[key] = { hoverRect: hr, tooltipRect: tr };
   };
 
+  // triggered via mouseenter of the hovering elements to set its
+  // accompanying tooltip in requiredPos position
   const setTooltipPos = (hoveringElement: HTMLElement) => {
-    // NOTE: Toolbar height is 32px
+    // NOTE: If your app has a Toolbar its height should be included in calculation.
+    // For svelte-postgres app the toolbar height is 32px
+
     // console.log('setTooltipPos called', hoveringElement);
     const { hoverRect, tooltipRect } = hoverRec[
       hoveringElement.id
@@ -176,7 +200,7 @@ CRTooltip could accept the following props, though all are optional
 
     // Todo this screen has no toolbar so instead of 32px we set 0px,
     // Todo otherwise top position will require 32 more pixels for tooltipPanel
-    const toolbarHeight = 0; // 32;
+    // const toolbarHeight = 0; // 32;
     translateX = '';
 
     // is there enough space before the right side of the screen

@@ -7,29 +7,35 @@ type TProps = {
   delay?: number; // transform params delay duration and baseScale
   duration?: number;
   baseScale?: number;
-  caption?: string; // caption, a string, and tooltipPanel are mutually exclusive.
-  // caption string can be styled by CSS style string sent as captionCSSStyle prop
 
-  captionCSSStyle?: string; // user styling as a CSS string that overrides CRTooltip provided default-caption
-  // CSS string; e.g. captionCSSStyle='font-size:14px; color:orange;'
-  tooltipPanel?: TPanel; // snippet object defined by user and it is sent by object name to component via $props()
-  // if caption and tooltipPanel snippet name are both specified caption is ignored
+  caption?: string; // caption, a string, and tooltipPanel snippet are mutually exclusive.
+  // The caption string can be styled by CSS style string or a class name
+  // sent as captionCSS prop. When both tooltipPanel and caption are specified
+  // inside the props the caption string is ignored
+
+  captionCSS?: string; // user styling as a CSS class name or a style string applied e.g. captionCSS="caption-class'
+  // with :global(.caption-class){...} or with style captionCSS='font-size:14px; color:orange;'
+
+  // When parent page has several hovering elements with tooltip captions the same class name
+  // or a style string variable is used in props structure with a name that differ from other
+  // props structure if their contents are different, so there could be prop structures
+  // for several panels and others for some caption strings: propsPanel, propsCaption1,...
+
+  tooltipPanel?: TPanel; // A snippet object defined by parent page and sent as object name to a component via $props().
+  // If caption and tooltipPanel snippet name are both specified the caption is ignored
   // e.g. for {#snippet userDetails(user)} we specify $props()
-  // tooltipPanel={userDetails}   -- a function reference, no a  name as string
-  // NOTE: when neither tooltipPanel nor caption are specified CRTooltip throws an error 'tooltipPanel or caption is mandatory'
-
-  tooltipPanelCSSClassName?: string; // user could send tooltipPanel's CSS class to CRTooltip to apply, but the CSS
-  // class name e.g. for userDetails snippet is named :global(.css-prop-class-userDetails)
-  // ans in CSS it must be encapsulated with :global() in order to propagate tp the component
-  // :global(.css-prop-class-userDetails){ CSS Roles... }
+  // tooltipPanel={userDetails}   -- a function reference, not as a string tooltipPanel="userDetails"
 
   children?: Snippet; // Any HTML markup content between <Tooltip> children... </Tooltip> tags.
   // Children is a hovering element triggering tooltip visibility via mouseenter/mouseleave
-  // so children HTML markup is usually encapsulated in a single HTML element
+  // so children HTML markup is usually encapsulated in a single HTML hovering element
 
   preferredPos?: string; // When, due to scrolling, there is a lack of space around the hovering element CRTooltip
-  // tries to find available space following the recommended sequence by user from the
-  // preferredPos prop string or, if not specified, use the default one 'top,left,right,bottom'
+  // tries to find an available space following the recommended sequence by the preferredPos
+  // prop string or, if not specified, by the default one 'top,left,right,bottom'
+
+  toolbarHeight?: string; // If a page has a toolbar from a layout its height would impact calculation of the proper
+  // tooltip position required by preferredPos, so its height should be sent via props
 };
 ```
 
@@ -51,16 +57,16 @@ type TProps = {
   }
 </script>
   <!-- snippet function with optional style argument -->
-  {#snippet userDetails(styleCSS?: string)}
-    <div class="tooltip-panel" style={styleCSS ? styleCSS : ''}>
-      <p style="color:lightgreen;font-size:22px;margin:0;">
-        John Doe
-      </p>
-      <p>1100 Cascade St.</p>
-      <p>San Diego, 92122</p>
-      <p>California</p>
-    </div>
-  {/snippet}
+ {#snippet userDetails()}
+  <div class="tooltip-panel">
+    <p style="color:lightgreen;font-size:22px;margin:0;">
+      John Doe
+    </p>
+    <p>1212 Cascade St.</p>
+    <p>San Diego, 92122</p>
+    <p>California</p>
+  </div>
+{/snippet}
 ```
 
 ````html
@@ -114,6 +120,25 @@ type TProps = {
 <style lang="scss">
   /* class sent as prop to component must be wrapped in :global() */
 
+  /* when sent as a prop no leading dot should be specified
+      as the Tooltip is an external to this content it has to
+      be treated as :global()
+      when sent as a prop no leading dot should be specified
+  */
+
+  :global(.css-prop-class-caption) {
+    font-size: 14px;
+    color: skyblue;
+    width: max-content;
+    height: 1rem !important;
+    padding: 0 1rem !important;
+    border-radius: 5px;
+    border: 1px solid skyblue;
+    background-color: navy;
+    text-align: center;
+    margin: 0;
+    outline: none;
+  }
   /* the tooltipPanel snippet renders HTML markup
      so several different parts are styled as follows
   */
@@ -154,38 +179,7 @@ type TProps = {
       margin-left: 12rem;
     }
   }
-  /* when sent as a prop no leading dot should be specified
-     as the Tooltip is an external to this content it has to
-     be treated as :global()
-  */
-  :global(.css-prop-class-userDetails) {
-    position: absolute;
-    top: 0 !important;
-    left: 0;
-    color: navy;
-    background-color: skyblue;
-    width: 14.5rem;
-    padding: 3px 1.4rem;
-    border-radius: 5px;
-    margin: 2rem 0 0 2.3rem;
-    text-align: center;
-    z-index: 10;
-  }
 
-  /* when sent as a prop no leading dot should be specified */
-  :global(.css-prop-class-caption) {
-    font-size: 14px;
-    color: skyblue;
-    width: max-content;
-    height: 1rem !important;
-    padding: 0 1rem !important;
-    border-radius: 5px;
-    border: 1px solid skyblue;
-    background-color: navy;
-    text-align: center;
-    margin: 0;
-    outline: none;
-  }
 
   /* hovering element is the first child or a
      wrapper HTML element for a more complex markup
