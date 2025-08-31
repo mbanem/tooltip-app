@@ -13,29 +13,32 @@ type TProps = {
   // sent as captionCSS prop. When both tooltipPanel and caption are specified
   // inside the props the caption string is ignored
 
-  captionCSS?: string; // user styling as a CSS class name or a style string applied e.g. captionCSS="caption-class'
-  // with :global(.caption-class){...} or with style captionCSS='font-size:14px; color:orange;'
+  captionCSS?: string; // user styling as a CSS class name or a style string applied
+  // to style the caption string e.g. captionCSS="caption-class' with
+  // :global(.caption-class){...} or with style captionCSS='font-size:14px; color:orange;'
 
-  // When parent page has several hovering elements with tooltip captions the same class name
-  // or a style string variable is used in props structure with a name that differ from other
-  // props structure if their contents are different, so there could be prop structures
-  // for several panels and others for some caption strings: propsPanel, propsCaption1,...
+  // When parent page has several hovering elements with tooltip captions the one class name
+  // or a style string variable can be used in props structure with a name specific to that
+  // hovering group e.g. <Tooltip captionCSS={captionCSSButtons}> and for another group
+  // a different props structure could be defined for them <Tooltip captionCSS={captionCSSNotes}>
+  // where let captionCSSButtons = 'font-size:14px;border:...';
 
-  tooltipPanel?: TPanel; // A snippet object defined by parent page and sent as object name to a component via $props().
-  // If caption and tooltipPanel snippet name are both specified the caption is ignored
-  // e.g. for {#snippet userDetails(user)} we specify $props()
+  tooltipPanel?: TPanel; // A snippet object defined by parent page and sent as object name
+  // to a component via $props(). If caption and tooltipPanel snippet names are both specified
+  // the caption is ignored e.g. for {#snippet userDetails(user)} we specify $props()
   // tooltipPanel={userDetails}   -- a function reference, not as a string tooltipPanel="userDetails"
 
   children?: Snippet; // Any HTML markup content between <Tooltip> children... </Tooltip> tags.
-  // Children is a hovering element triggering tooltip visibility via mouseenter/mouseleave
-  // so children HTML markup is usually encapsulated in a single HTML hovering element
+  // Children are hovering elements triggering tooltip visibility via mouseenter/mouseleave so
+  // children markup is usually encapsulated in a single HTML hovering element, which is recommended.
 
-  preferredPos?: string; // When, due to scrolling, there is a lack of space around the hovering element CRTooltip
-  // tries to find an available space following the recommended sequence by the preferredPos
-  // prop string or, if not specified, by the default one 'top,left,right,bottom'
+  preferredPos?: string; // When, due to the scrolling, there is a lack of space around the hovering
+  // element then CRTooltip tries to find an available space following the recommended sequence by the
+  // preferredPos prop string or, if not specified, by the default one 'top,left,right,bottom'.
 
-  toolbarHeight?: string; // If a page has a toolbar from a layout its height would impact calculation of the proper
-  // tooltip position required by preferredPos, so its height should be sent via props
+  toolbarHeight?: string; // If a page has a toolbar from a layout its height would impact the calculation
+  // of the proper tooltip position required by preferredPos, so its toolbarHeight as a number should be
+  // sent via props
 };
 ```
 
@@ -45,6 +48,7 @@ type TProps = {
 <script lang='ts'>
   import Tooltip from $lib/components/CRTooltip.svelte
 
+  // a single prop structure in this example while there could be several
   const props = {
     delay: 250,
     duration: 800,
@@ -52,11 +56,21 @@ type TProps = {
     preferredPos: 'top,right,left,bottom',
   };
 
+  // a fake action triggered by a button
   const printReport = () => {
     console.log('Printing the Report...)
   }
 </script>
-  <!-- snippet function with optional style argument -->
+  <!-- snippet function is recommended to be styled by a local
+  CSS class and styles. Sending a CSS class via props is not
+  always successful as the class should be defined global e.g.
+     <style lang='scss'>
+       :global(.user-details){...}
+    </style>
+    but the page and component CSS scopes differ and often only
+    CSS rules that cascade by default are delivered rendering
+    the tooltipPane inadequately.
+   -->
  {#snippet userDetails()}
   <div class="tooltip-panel">
     <p style="color:lightgreen;font-size:22px;margin:0;">
@@ -70,6 +84,11 @@ type TProps = {
 ```
 
 ````html
+<!-- in order to test situations where there not adequate space
+ around the hoveringElement a class as tooltip-wrapper here
+ could position <Tooltips> in the middle od a larger view so
+ the hovering elements could be scrolled in test position
+ -->
 <div class="tooltip-wrapper">
   <Tooltip
     {...props}
@@ -122,8 +141,7 @@ type TProps = {
 
   /* when sent as a prop no leading dot should be specified
       as the Tooltip is an external to this content it has to
-      be treated as :global()
-      when sent as a prop no leading dot should be specified
+      be declared as :global()
   */
 
   :global(.css-prop-class-caption) {
@@ -141,6 +159,8 @@ type TProps = {
   }
   /* the tooltipPanel snippet renders HTML markup
      so several different parts are styled as follows
+     and that often makes problem for sending such a
+     CSS class as global via props
   */
   .tooltip-panel {
     position: absolute;
@@ -169,8 +189,9 @@ type TProps = {
   }
 
   /* In order to obtain the proper size of tooltipPanel
-     CRTooltip expect only one HTML element as output
-     so for a complex markup we need a wrapper element
+     necessary for proper positioning of the accompanying
+     tooltip CRTooltip component expect only one HTML
+     element as a wrapper for a complex markup.
   */
   .tooltip-wrapper {
     width: max-content;
@@ -181,8 +202,9 @@ type TProps = {
   }
 
 
-  /* hovering element is the first child or a
-     wrapper HTML element for a more complex markup
+  /*
+    hovering element is selected by CRTooltip as the first child
+    so for a complex markup it should be an HTML wrapper element
   */
   .hovering-element {
     margin: 0; //8rem 0 0 18rem;
