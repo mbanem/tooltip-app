@@ -6,9 +6,9 @@ CRTooltip could accept the following props, though all are optional
     duration?: number;
     baseScale?: number;
 
-    caption?: string;               // caption, a string, and tooltipPanel snippet are mutually exclusive.
+    caption?: string;               // caption, a string, and panel snippet are mutually exclusive.
                                     // The caption string can be styled by CSS style string or a class name
-                                    // sent as captionCSS prop. When both tooltipPanel and caption are specified 
+                                    // sent as captionCSS prop. When both panel and caption are specified 
                                     // inside the props the caption string is ignored
 
     captionCSS?: string;            // user styling as a CSS class name or a style string applied e.g. captionCSS='caption-class'
@@ -22,18 +22,18 @@ CRTooltip could accept the following props, though all are optional
                                     // and spread it via {...props} inside <Tooltip {...props} ...> for each
                                     // hovering element that uses the same styling
 
-    tooltipPanel?: TPanel;          // A snippet object defined by parent page and sent as object name to a component via $props().
-                                    // If caption and tooltipPanel snippet name are both specified the caption is ignored
+    panel?: TPanel;          // A snippet object defined by parent page and sent as object name to a component via $props().
+                                    // If caption and panel snippet name are both specified the caption is ignored
                                     // e.g. for {#snippet userDetails(user)} we specify $props()
-                                    // tooltipPanel={userDetails}   -- a function reference, not as a string tooltipPanel="userDetails"
-    panelArgs?: TPanelArgs;         // When tooltipPanel accepts arguments the parent page sends to the Tooltip component panelArgs prop
-                                    // as an array of arguments to be forwarded to the tooltipPanel snippet
+                                    // panel={userDetails}   -- a function reference, not as a string panel="userDetails"
+    panelArgs?: TPanelArgs;         // When panel accepts arguments the parent page sends to the Tooltip component panelArgs prop
+                                    // as an array of arguments to be forwarded to the panel snippet
                                     // For instance for userDetails snippet defined as
                                     //      {#snippet userDetails([fName, lName, isAdmin]: [string, string, boolean])}
                                     // where args are sent as a tuple (an array of fixed length with item types)
                                     // the parent page sends panelArgs={['John:', 'Doe', true]} to the Tooltip component
                                     // and the Tooltip component forwards it to the userDetails snippet when rendering it
-                                    //      {@render panel?.(panelArgs)} 
+                                    //      {@render runtimePanel?.(panelArgs)} 
 
     children?: Snippet;             // Any HTML markup content between <Tooltip> children... </Tooltip> tags.
                                     // Children is a hovering element triggering tooltip visibility via mouseenter/mouseleave
@@ -103,7 +103,7 @@ CRTooltip could accept the following props, though all are optional
   };
 
   const hoveringId = 'hovering-' + sixHash();
-  // as caption and tooltipPanel are mutually exclusive
+  // as caption and panel are mutually exclusive
   // even when both are received via $props()
   // we use the same tooltipPanelId for both
   // const tooltipPanelId = 'tooltip-' + sixHash();
@@ -118,7 +118,7 @@ CRTooltip could accept the following props, though all are optional
     baseScale?: number;
     caption?: string;
     captionCSS?: string;
-    tooltipPanel?: Snippet<[...any[]]> | null;
+    panel?: Snippet<[...any[]]> | null;
     panelArgs?: TPanelArgs; // arguments to forward
     children?: Snippet;
     preferredPos?: string;
@@ -131,7 +131,7 @@ CRTooltip could accept the following props, though all are optional
     baseScale = 0,
     caption = '',
     captionCSS = '',
-    tooltipPanel,
+    panel,
     panelArgs, // arguments to forward
     children,
     preferredPos = 'top,left,right,bottom',
@@ -145,14 +145,10 @@ CRTooltip could accept the following props, though all are optional
   let translateX = $state<string>('');
   let translateY = $state<string>('');
 
-  let panel: TPanel = tooltipPanel
-    ? tooltipPanel
-    : caption
-      ? captionPanel
-      : null;
+  let runtimePanel: TPanel = panel ? panel : caption ? captionPanel : null;
 
-  if (!panel) {
-    throw new Error('tooltipPanel or caption is mandatory');
+  if (!runtimePanel) {
+    throw new Error('panel or caption is mandatory');
   }
 
   const getPreferred = () => {
@@ -224,7 +220,7 @@ CRTooltip could accept the following props, though all are optional
     );
     // Todo
     // this screen has no toolbar so instead of 32px we set 0px,
-    // otherwise top position will require 32 more pixels for tooltipPanel
+    // otherwise top position will require 32 more pixels for panel
     // const toolbarHeight = 0; // 32;
     translateX = '';
 
@@ -315,16 +311,16 @@ CRTooltip could accept the following props, though all are optional
 
   onMount(() => {
     setTimeout(() => {
-      // tooltipPanelEl holds tooltipPanel or captionPanel
+      // tooltipPanelEl holds panel or captionPanel
       // depending on the $props() passed to this component
-      // and we take the child as a panel
+      // and we take the child as a runtimePanel
       // const ttPanelWrapper = document.getElementById(
       //   tooltipPanelId,
       // ) as HTMLElement;
 
       // if (ttPanelWrapper) {
       if (tooltipPanelEl) {
-        // ttPanel is tooltipPanel  or captionPanel to be show as a tooltip
+        // ttPanel is panel  or captionPanel to be show as a tooltip
         const ttPanel = tooltipPanelEl.children[0] as HTMLElement;
         // hoveringEl is the element that triggers the tooltip
 
@@ -373,7 +369,7 @@ CRTooltip could accept the following props, though all are optional
     style="`position:absolute;top:-9999px !important;left:-9999px !important;visibility:hidden;padding:0;margin:0;border:none;outline:none;width:max-content;"
     class="ttWrapper"
   >
-    {@render panel?.(panelArgs)}
+    {@render runtimePanel?.(panelArgs)}
   </div>
 {/if}
 
@@ -422,7 +418,7 @@ CRTooltip could accept the following props, though all are optional
       }}
     >
       <div class="ttWrapper">
-        {@render panel?.(panelArgs)}
+        {@render runtimePanel?.(panelArgs)}
       </div>
     </div>
   {/if}
@@ -460,7 +456,7 @@ CRTooltip could accept the following props, though all are optional
     outline: none;
   }
   .caption-default {
-    border: 1px solid yellow;
+    border: 6px solid skyblue;
     border-radius: 5px;
     color: yellow;
     background-color: navy;

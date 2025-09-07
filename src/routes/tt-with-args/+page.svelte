@@ -31,9 +31,9 @@
 <div class="tooltip-wrapper">
   <div style="position:absolute:top:0;left:0">
     <Tooltip
-      tooltipPanel={userDetails}
+      panel={userDetails}
       panelArgs={[
-        'Bane:',
+        'Bane',
         'Milutinovic',
         '118 Princess St',
         'Toronto M5A 0B1',
@@ -45,9 +45,9 @@
       <button>Bane Milutinovic top</button>
     </Tooltip>
     <Tooltip
-      tooltipPanel={userDetails}
+      panel={userDetails}
       panelArgs={[
-        'Filip:',
+        'Filip',
         'Isakovic',
         '6425 Cascade St.',
         'San Diego 92122',
@@ -61,9 +61,9 @@
   </div>
   <div style="position:absolute;top:0;left:25rem;">
     <Tooltip
-      tooltipPanel={userDetails}
+      panel={userDetails}
       panelArgs={[
-        'Matia:',
+        'Matia',
         'Isakovic',
         '2210 Main St.',
         'New York12332;',
@@ -75,9 +75,9 @@
       <button>Moderator right</button>
     </Tooltip>
     <Tooltip
-      tooltipPanel={userDetails}
+      panel={userDetails}
       panelArgs={[
-        'Ljuban:',
+        'Ljuban',
         'Milutinovic',
         '100 Coe Hill Dr.',
         'Toronto M4A 0B1;',
@@ -86,30 +86,30 @@
       ]}
       preferredPos="bottom,top,right,left"
     >
-      <button>Moderator right</button>
+      <button>Moderator bottom</button>
     </Tooltip>
   </div>
 </div>
 <Tooltip
   caption="Matia, Isakovic, 2210 Main St. New York12332; New York (user)"
-  captionCSS="color:white;"
+  captionCSS="color:white;border:8px solid skyblue;"
   preferredPos="top,right,left,bottom"
 >
-  <button>Moderator top</button>
+  <button>caption top</button>
 </Tooltip>
 <Tooltip
   caption="Marko, Milutinovic, 100 Coe Hill Dr. Toronto M4A 0B1; Ontario (user)"
   captionCSS="cap"
   preferredPos="right,top,left,bottom"
 >
-  <button>Marko right</button>
+  <button>caption right</button>
 </Tooltip>
 <Tooltip
   caption="Mia, Milutinovic, 100 Coe Hill Dr. Toronto M4A 0B1; Ontario (user)"
   captionCSS="caption-css"
   preferredPos="top,right,left,bottom"
 >
-  <button>Mia top</button>
+  <button>caption top</button>
 </Tooltip>
 <div style="margin-top:20rem;margin-left:30rem;"></div>
 
