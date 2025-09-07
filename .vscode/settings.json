@@ -2,7 +2,7 @@
   "todo-tree.highlights.defaultHighlight": {
     "type": "text-and-comment",
     "foreground": "#ffffff",
-    "background": "#ff4500",
+    "background": "#d8967e",
     "icon": "check",
     "iconColour": "#2ecc71",
     "gutterIcon": true
@@ -10,7 +10,7 @@
   "todo-tree.highlights.customHighlight": {
     "Todo": {
       "foreground": "#ffffff",
-      "background": "#ff4500",
+      "background": "#d8967e",
       "icon": "check",
       "iconColour": "#2ecc71",
       "type": "text-and-comment"
