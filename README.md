@@ -32,12 +32,12 @@ type TProps = {
   // Children are hovering elements triggering tooltip visibility via mouseenter/mouseleave so
   // children markup is usually encapsulated in a single HTML hovering element, which is recommended.
 
-  preferredPos?: string; // When, due to the scrolling, there is a lack of space around the hovering
+  preferredPosition?: string; // When, due to the scrolling, there is a lack of space around the hovering
   // element then CRTooltip tries to find an available space following the recommended sequence by the
-  // preferredPos prop string or, if not specified, by the default one 'top,left,right,bottom'.
+  // preferredPosition prop string or, if not specified, by the default one 'top,left,right,bottom'.
 
   toolbarHeight?: string; // If a page has a toolbar from a layout its height would impact the calculation
-  // of the proper tooltip position required by preferredPos, so its toolbarHeight as a number should be
+  // of the proper tooltip position required by preferredPosition, so its toolbarHeight as a number should be
   // sent via props
 };
 ```
@@ -53,7 +53,7 @@ type TProps = {
     delay: 250,
     duration: 800,
     baseScale: 0,
-    preferredPos: 'top,right,left,bottom',
+    preferredPosition: 'top,right,left,bottom',
   };
 
   // a fake action triggered by a button
@@ -107,12 +107,12 @@ type TProps = {
   and make no space available around hovering
   element for top or left so CRTooltip should
   examine the next available positions from
-  the specified or default preferredPos
+  the specified or default preferredPosition
   </pre>
 
   <Tooltip
     {...props}
-    preferredPos={preferPos}
+    preferredPosition={preferPos}
     caption="caption: This is the tooltip as a caption"
     captionCSSStyle="css-prop-class-caption"
 

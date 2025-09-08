@@ -5,18 +5,10 @@
   function printReport() {
     console.log('Printing report...');
   }
-  let visible = $state<boolean>(false);
-  const toggle = () => {
-    visible = !visible;
-  };
 </script>
 
 <a href="/">Home</a>
 
-<div>
-  visible {visible}
-  <p style="color:red;margin-left:1rem;">does not work</p>
-</div>
 <!-- <div class="tooltip-panel">
   <p style="color:lightgreen;font-size:22px;margin:0;">Matia Isakovic</p>
   <p>6524 Cascade St.</p>

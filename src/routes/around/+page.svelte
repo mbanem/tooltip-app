@@ -1,5 +1,13 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  // import { scrollToPosition } from '$lib/utils/helpers';
+  import { afterNavigate } from '$app/navigation';
+
+  const scrollToPosition = (top: number, left: number) => {
+    afterNavigate(() => {
+      window.scroll({ top, left, behavior: 'smooth' });
+    });
+  };
   type Positions = {
     top: boolean;
     left: boolean;
@@ -11,12 +19,13 @@
   let spaceBottom = $state(0);
   let spaceLeft = $state(0);
   let spaceRight = $state(0);
+  let okPos = $state<string>('');
 
   const hoverRect = () => {
     return hoveringElement?.getBoundingClientRect() as DOMRect;
   };
   let hr = $derived(hoverRect());
-  console.log('hoverRect', hr, 'tooltipRect');
+  // console.log('hoverRect', hr, 'tooltipRect');
   function availablePositions(
     hoveringElement: HTMLElement,
     tooltipWidth: number = 140,
@@ -54,17 +63,25 @@
     };
   }
   const showTooltip = () => {
-    console.log(
-      'hoveringRect',
-      hoveringElement?.getBoundingClientRect() as DOMRect,
-    );
-    const { top, left, right, bottom } = availablePositions(
-      hoveringElement as HTMLElement,
-    );
-    console.log(top, left, right, bottom);
+    // console.log(
+    //   'hoveringRect',
+    //   hoveringElement?.getBoundingClientRect() as DOMRect,
+    // );
+    // okPos = availablePositions(hoveringElement as HTMLElement);
+    console.log(okPos);
   };
+
   onMount(() => {
-    console.log(hoveringElement);
+    scrollToPosition(450, 100);
+    // console.log(hoveringElement);
+    // okPos = availablePositions(hoveringElement as HTMLElement);
+    const color = (b: boolean) => {
+      return `<span style="color:${b ? 'green' : 'red'}">${String(b).toUpperCase()}</span>`;
+    };
+    addEventListener('scroll', (event) => {
+      const ap = availablePositions(hoveringElement as HTMLElement);
+      okPos = `top ${color(ap.top)}, left ${color(ap.left)}, right ${color(ap.right)}, bottom ${color(ap.bottom)}`;
+    });
   });
 </script>
 
@@ -78,15 +95,18 @@
   hoverRect.right, {hr.right}
   hoverRect.bottom {hr.bottom}
 </p> -->
-<button onmouseenter={showTooltip} bind:this={hoveringElement}
-  >hovering element</button
+<div
+  style="display:flex;flex-direction:column;width:40rem;margin:55rem 70rem 0 60rem;"
 >
-<div style="margin:60rem 80rem;">making view</div>
+  <div style="user-select:none;">{@html okPos}</div>
+  <button
+    onmouseenter={showTooltip}
+    bind:this={hoveringElement}
+    style="height:3rem;"
+    >scroll to see available space for tooltip around</button
+  >
+</div>
+<div style="margin:120rem 250rem 140rem 160rem !important;">making view</div>
 
 <style>
-  button {
-    position: absolute;
-    top: 10rem;
-    left: 10rem;
-  }
 </style>

@@ -39,12 +39,12 @@ CRTooltip could accept the following props, though all are optional
                                     // Children is a hovering element triggering tooltip visibility via mouseenter/mouseleave
                                     // so children HTML markup is usually encapsulated in a single HTML hovering element
 
-    preferredPos?: string;          // When, due to scrolling, there is a lack of space around the hovering element CRTooltip
-                                    // tries to find an available space following the recommended sequence by the preferredPos
+    preferredPosition?: string;          // When, due to scrolling, there is a lack of space around the hovering element CRTooltip
+                                    // tries to find an available space following the recommended sequence by the preferredPosition
                                     // prop string or, if not specified, by the default one 'top,left,right,bottom'
     
     toolbarHeight?: string          // If a page has a toolbar from a layout its height would impact calculation of the proper
-                                    // tooltip position required by preferredPos, so its height should be sent via props
+                                    // tooltip position required by preferredPosition, so its height should be sent via props
 
   };
 
@@ -121,7 +121,7 @@ CRTooltip could accept the following props, though all are optional
     panel?: Snippet<[...any[]]> | null;
     panelArgs?: TPanelArgs; // arguments to forward
     children?: Snippet;
-    preferredPos?: string;
+    preferredPosition?: string;
     toolbarHeight?: number;
   };
 
@@ -134,13 +134,13 @@ CRTooltip could accept the following props, though all are optional
     panel,
     panelArgs, // arguments to forward
     children,
-    preferredPos = 'top,left,right,bottom',
+    preferredPosition = 'top,left,right,bottom',
     toolbarHeight = 0,
   }: TProps = $props();
 
   // console.log('captionCSS', captionCSS);
   // Need to define variables as the setTooltipPos function adjusted them
-  // to position properly based on preferredPos settings and available
+  // to position properly based on preferredPosition settings and available
   // space around the hovering elements
   let translateX = $state<string>('');
   let translateY = $state<string>('');
@@ -152,7 +152,7 @@ CRTooltip could accept the following props, though all are optional
   }
 
   const getPreferred = () => {
-    return preferredPos.replace(/\s+/g, '').split(',') as string[];
+    return preferredPosition.replace(/\s+/g, '').split(',') as string[];
   };
 
   let visible = $state(false);
@@ -162,7 +162,7 @@ CRTooltip could accept the following props, though all are optional
 
   // the setTooltipPos examine necessary parameters for applying
   // tooltip at required position and is forced to iterate over
-  // the preferredPos list until params for a position match
+  // the preferredPosition list until params for a position match
   const OK = $state({
     top: false,
     bottom: false,
@@ -185,7 +185,7 @@ CRTooltip could accept the following props, though all are optional
   // where  key is a hovering element id inserted inside onMount
   // and registered in hoverRec array easy to fetch it when
   // onmouseenter handler has to display tooltip in a required
-  // preferredPos position
+  // preferredPosition position
   type HoverRecord = Record<string, HoverData>;
   const hoverRec: HoverRecord = {};
 

@@ -11,7 +11,7 @@
 
   // caption styling could be done via CSS class name or a style string
   // NOTE: If page has a toolbar from a layout its height would impact calculation of the proper
-  //       tooltip position required by preferredPos, so its height as a number of pixels should
+  //       tooltip position required by preferredPosition, so its height as a number of pixels should
   //       be sent via props, e.g. toolbarHeight: 32  not '32px'
 
   const props = {
@@ -32,7 +32,7 @@
     font-family: Arial, Helvetica, sans-serif;
     z-index: 10;
     `,
-    // preferredPos: preferPos,   // specify among props or inside <Tooltip> see below
+    // preferredPosition: preferPos,   // specify among props or inside <Tooltip> see below
   };
   const printReport = () => {
     console.log('printing the report...');
@@ -97,9 +97,9 @@
 <div class="tooltip-wrapper">
   <Tooltip
     {...props}
-    tooltipPanel={userDetails}
+    panel={userDetails}
     caption={'Click to Print Tooltip Panel -- ignored as userDetails is provided'}
-    preferredPos={preferPos}
+    preferredPosition={preferPos}
   >
     <button class="hovering-button" onclick={printReport}>
       Filip Isakovic
@@ -125,7 +125,7 @@
     </pre>
   <Tooltip
     {...props}
-    preferredPos={preferPos}
+    preferredPosition={preferPos}
     caption="caption: This is the caption"
   >
     <button class="hovering-button" onclick={printReport}>

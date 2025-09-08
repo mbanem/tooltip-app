@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { onMount, type Snippet } from 'svelte';
+  import { type Snippet } from 'svelte';
   import Tooltip from '$lib/components/CRTooltip.svelte'; // Adjust the path as necessary
-  onMount(() => {});
 
   type TPanelArgs = any[]; //[string, string, boolean];
 </script>
@@ -40,7 +39,7 @@
         'Ontario',
         true,
       ]}
-      preferredPos="top,left,bottom,right"
+      preferredPosition="top,left,bottom,right"
     >
       <button>Bane Milutinovic top</button>
     </Tooltip>
@@ -54,7 +53,7 @@
         'California',
         true,
       ]}
-      preferredPos="left,top,bottom,right"
+      preferredPosition="left,top,bottom,right"
     >
       <button>John Doe (admin) left</button>
     </Tooltip>
@@ -70,7 +69,7 @@
         'New York',
         false,
       ]}
-      preferredPos="right,left,top,right,left,bottom"
+      preferredPosition="right,left,top,right,left,bottom"
     >
       <button>Moderator right</button>
     </Tooltip>
@@ -84,7 +83,7 @@
         'Ontario',
         false,
       ]}
-      preferredPos="bottom,top,right,left"
+      preferredPosition="bottom,top,right,left"
     >
       <button>Moderator bottom</button>
     </Tooltip>
@@ -93,21 +92,21 @@
 <Tooltip
   caption="Matia, Isakovic, 2210 Main St. New York12332; New York (user)"
   captionCSS="color:white;border:8px solid skyblue;"
-  preferredPos="top,right,left,bottom"
+  preferredPosition="top,right,left,bottom"
 >
   <button>caption top</button>
 </Tooltip>
 <Tooltip
   caption="Marko, Milutinovic, 100 Coe Hill Dr. Toronto M4A 0B1; Ontario (user)"
   captionCSS="cap"
-  preferredPos="right,top,left,bottom"
+  preferredPosition="right,top,left,bottom"
 >
   <button>caption right</button>
 </Tooltip>
 <Tooltip
   caption="Mia, Milutinovic, 100 Coe Hill Dr. Toronto M4A 0B1; Ontario (user)"
   captionCSS="caption-css"
-  preferredPos="top,right,left,bottom"
+  preferredPosition="top,right,left,bottom"
 >
   <button>caption top</button>
 </Tooltip>

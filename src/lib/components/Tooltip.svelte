@@ -70,7 +70,7 @@
     tooltipPanel?: Snippet<[...any[]]> | null;
     panelArgs?: TPanelArgs; // arguments to forward
     children?: Snippet;
-    preferredPos?: string;
+    preferredPosition?: string;
     toolbarHeight?: number;
     top?: string;
     left?: string;
@@ -85,7 +85,7 @@
     tooltipPanel,
     panelArgs, // arguments to forward
     children,
-    preferredPos = 'top,left,right,bottom',
+    preferredPosition = 'top,left,right,bottom',
     toolbarHeight = 0,
     top = '0',
     left = '0',
@@ -95,7 +95,7 @@
   console.log('panelArgs', panelArgs);
   // console.log('captionCSS', captionCSS);
   // Need to define variables as the setTooltipPos function adjusted them
-  // to position properly based on preferredPos settings and available
+  // to position properly based on preferredPosition settings and available
   // space around the hovering elements
   let translateX = $state<string>('');
   let translateY = $state<string>('');

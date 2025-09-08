@@ -20,7 +20,7 @@
   </div>
 {/snippet}
 
-<Tooltip {tooltipPanel} preferredPos={preferredPositions}>
+<Tooltip {tooltipPanel} preferredPosition={preferredPositions}>
   <button id="x" onclick={printReport}>Print Report</button>
 </Tooltip>
 <p style="color:red;margin-left:1rem;">top position clips the tooltip</p>
