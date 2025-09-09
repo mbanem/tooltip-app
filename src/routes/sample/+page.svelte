@@ -84,7 +84,6 @@
   });
 </script>
 
-<a href="/">Home</a>
 <p style="color:red;margin-left:1rem;">
   availablePositions(...) is undefined and tru/false Positions list
 </p>

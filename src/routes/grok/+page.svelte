@@ -7,8 +7,6 @@
   }
 </script>
 
-<a href="/">Home</a>
-
 <!-- <div class="tooltip-panel">
   <p style="color:lightgreen;font-size:22px;margin:0;">Matia Isakovic</p>
   <p>6524 Cascade St.</p>

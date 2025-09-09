@@ -124,8 +124,6 @@
   });
 </script>
 
-<a href="/">Home</a>
-
 <div>
   tooltipPosition {tooltipPosition}
   <p style="color:blue;">shows as true/false list</p>

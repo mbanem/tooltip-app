@@ -105,7 +105,6 @@
       Filip Isakovic
     </button>
   </Tooltip>
-  <a href="/">Home</a>
   <p style="color:blue;">Positions are OK</p>
   <p style="margin-left:12rem;">Change Preferred Tooltip Position</p>
   <input class="input" bind:value={preferPos} />

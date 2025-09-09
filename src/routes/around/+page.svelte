@@ -85,7 +85,6 @@
   });
 </script>
 
-<a href="/">Home</a>
 <p style="color:blue;margin-left:1rem;">
   Using scroll Positions as true/false list and DOMRects
 </p>

@@ -49,8 +49,6 @@
   });
 </script>
 
-<a href="/">Home</a>
-
 <button onmouseenter={showTooltip} bind:this={el}>hovering element</button>
 <p style="margin:6rem 10rem;">
   spaceTop {spaceTop} tooltipHeight {tooltipHeight} delta {delta}
